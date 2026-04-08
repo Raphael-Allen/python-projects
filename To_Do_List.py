@@ -1,9 +1,22 @@
+import json
+
 class ToDoList:
 
     def __init__(self):
         self.welcome = "Welcome to you To Do List!"
         self.tasks = []
+        self.load_tasks()
 
+    def save_tasks(self):
+        with open("tasks.json", "w") as f:
+            json.dump(self.tasks, f)
+
+    def load_tasks(self):
+        try:
+            with open("tasks.json", "r") as f:
+                self.tasks = json.load(f)
+        except FileNotFoundError:
+            self.tasks = []
     def run(self):
         while True:
             self.selector = input("1. Add task 2. Remove task 3. View tasks 4. Quit ")
@@ -26,6 +39,7 @@ class ToDoList:
             if again == "1":
                 pass
             elif again == "2":
+                self.save_tasks()
                 return
             else:
                 print("Error: Input invalid")
@@ -50,6 +64,7 @@ class ToDoList:
             print("Error: Task number does not exist")
         for index, task in enumerate(self.tasks, start=1):
             print(index, task)
+        self.save_tasks()
 
     def view_tasks(self):
         if len(self.tasks) == 0:
@@ -58,5 +73,5 @@ class ToDoList:
             for index, task in enumerate(self.tasks, start=1):
                 print(index, task)
 
-ToDo = ToDoList()
+ToDo = ToDoList()           # force a save
 ToDo.run()
